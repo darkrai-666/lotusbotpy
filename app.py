@@ -19,6 +19,7 @@ class MyClient(commands.Bot):
     async def setup_hook(self):
         await self.load_extension("info")
         await self.load_extension("others")
+        await self.load_extension("animals")
 
 
 client = MyClient()

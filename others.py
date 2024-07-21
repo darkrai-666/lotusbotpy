@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-import random, json, urllib.request
+import random, json, urllib.request, time
 
 
 # all cogs inherit from this base class
@@ -34,7 +34,6 @@ class others(commands.Cog):
         url = "https://insult.mattbas.org/api/insult.json"
         response = urllib.request.urlopen(url)
         data = json.loads(response.read())
-        print(target)
         result = target.mention + ", " + data["insult"]
         await ctx.send(result)
 
@@ -42,10 +41,50 @@ class others(commands.Cog):
     @commands.command(name="throw")
     async def throw(self, ctx):
         f = open('ammo.json', )
-        ammo = json.load(f)
-
-
-
+        jammo = json.load(f)
+        ammo = jammo["ammo"]
+        steven = jammo["ammoSteven"]
+        soft = jammo["ammoSoft"]
+        hard = jammo["ammoHard"]
+        corium = jammo["ammoCorium"]
+        amountlimit = jammo["amount"]
+        amount = random.randint(1, amountlimit)
+        # print(len(ammo), len(steven), len(soft), len(hard), len(corium))
+        output = ""
+        r = 0
+        for r in range(amount):
+            sel = random.randint(1,100)
+            if r <= 0:
+                output = output
+            elif r < amount-2:
+                output = output + ", "
+            else:
+                output = output + " and "
+            match sel:
+                case sel if sel <=40:
+                    sela = random.randint(0, len(ammo)-1)
+                    output = output + ammo[sela]
+                case sel if sel <=60:
+                    sela = random.randint(0, len(steven)-1)
+                    output = output + steven[sela]
+                case sel if sel <=80:
+                    sela = random.randint(0, len(soft)-1)
+                    # print(sela)
+                    output = output + soft[sela]
+                case sel if sel <=95:
+                    sela = random.randint(0, len(hard)-1)
+                    output = output + hard[sela]
+                case sel if sel >95:
+                    sela = random.randint(0, len(corium)-1)
+                    output = output + corium[sela]
+                case _:
+                    output = output + "Error"
+            r += 1
+        if not ctx.message.mentions:
+            target = ctx.author.mention
+        else:
+            target = ctx.message.mentions[0].mention
+        await ctx.send(output + " is thrown at " + target)
 
 
 async def setup(bot):
